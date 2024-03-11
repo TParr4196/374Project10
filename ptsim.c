@@ -93,19 +93,25 @@ void kill_process(int proc_num){
 }
 
 void store_value(int proc_num, int vaddr, int value){
-    int page_table=get_page_table(proc_num);
-    int vpage=vaddr/PAGE_SIZE;
-    int addr=get_address(page_table, vpage);
-    int paddr=get_address(addr, vaddr%PAGE_SIZE);
-    mem[paddr]=value;
+    int page_table = get_page_table(proc_num);
+    int vpage = vaddr >> PAGE_SHIFT;
+    int offset = vaddr & (PAGE_SIZE-1);
+    int ppage = mem[get_address(page_table, vpage)];
+    int paddr = get_address(ppage, offset);
+    mem[paddr] = value;
     
     printf("Store proc %d: %d => %d, value=%d\n", proc_num, vaddr, paddr, value);
 }
 
-int load_value(int proc_num, int vaddr){
-    //TODO
-    (void)proc_num; (void)vaddr;
-    return 0;
+void load_value(int proc_num, int vaddr){
+    int page_table = get_page_table(proc_num);
+    int vpage = vaddr >> PAGE_SHIFT;
+    int offset = vaddr & (PAGE_SIZE-1);
+    int ppage = mem[get_address(page_table, vpage)];
+    int paddr = get_address(ppage, offset);
+    int value = mem[paddr];
+
+    printf("Load proc %d: %d => %d, value=%d\n", proc_num, vaddr, paddr, value);
 }
 
 //
@@ -186,6 +192,7 @@ int main(int argc, char *argv[])
             int proc_num = atoi(argv[++i]);
             int vaddr = atoi(argv[++i]);
             int value = atoi(argv[++i]);
+            (void) proc_num; (void) vaddr; (void) value;
             store_value(proc_num, vaddr, value);
         }
         else if (strcmp(argv[i], "lb") == 0) {
@@ -193,6 +200,5 @@ int main(int argc, char *argv[])
             int vaddr = atoi(argv[++i]);
             load_value(proc_num, vaddr);
         }
-        // TODO: more command line arguments next week
     }
 }
