@@ -41,6 +41,19 @@ unsigned char get_page_table(int proc_num)
     return mem[ptp_addr];
 }
 
+int first_free_page_table(){
+    //search for first unallocated page for process page table
+    int i=1;
+    while(mem[i]!=0&&i<64){
+        i++;
+    }
+    if (i==64){
+        return -1;
+    }else{
+        return i;
+    }
+}
+
 //
 // Allocate pages for a new process
 //
@@ -48,12 +61,8 @@ unsigned char get_page_table(int proc_num)
 //
 void new_process(int proc_num, int page_count)
 {
-    //search for first unallocated page for process page table
-    int i=1;
-    while(mem[i]!=0&&i<64){
-        i++;
-    }
-    if (i==64){
+    int i=first_free_page_table();
+    if(i==-1){
         printf("OOM: proc %d: page table\n", proc_num);
         return;
     }
