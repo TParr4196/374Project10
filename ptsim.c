@@ -70,6 +70,7 @@ void new_process(int proc_num, int page_count)
     mem[proc_num+64]=i;
     i++;
 
+    
     //place list of allocated pages in process page table
     int pages_allocated=0;
     while(page_count>pages_allocated&&i<64){
