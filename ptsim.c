@@ -7,7 +7,6 @@
 #define PAGE_SIZE 256  // MUST equal 2^PAGE_SHIFT
 #define PAGE_COUNT 64
 #define PAGE_SHIFT 8  // Shift page number this much
-
 #define PTP_OFFSET 64 // How far offset in page 0 is the page table pointer table
 
 // Simulated RAM
